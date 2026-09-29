@@ -1,0 +1,19 @@
+workflows:
+  watchcards-check:
+    name: WatchCards Build Check
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      xcode: latest
+    scripts:
+      - name: Show Xcode project
+        script: |
+          xcodebuild -list -project WatchCards.xcodeproj
+      - name: Build iPhone simulator
+        script: |
+          set -o pipefail
+          xcodebuild -project WatchCards.xcodeproj -scheme WatchCards -configuration Debug -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build
+      - name: Build Apple Watch simulator
+        script: |
+          set -o pipefail
+          xcodebuild -project WatchCards.xcodeproj -target WatchCardsWatch -configuration Debug -sdk watchsimulator CODE_SIGNING_ALLOWED=NO build
